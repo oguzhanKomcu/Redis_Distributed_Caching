@@ -1,0 +1,89 @@
+﻿@using System.Data;
+
+@model List<City> 
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+@*<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <select class="form-select" id="il-select">
+                    <option selected disabled>İl Seçiniz</option>
+                    @foreach (var item in Model.sehirler)
+                    {
+                        <option value="@item.Id">@item.City_Name</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-4">
+                <select class="form-select" id="ilce-select" disabled>
+                    <option selected disabled >İlçe Seçiniz</option>
+                    @foreach (var item in Model.listIlceler)
+                    {
+                        <option value="@item.Il_Id">@item.Ilce_Name</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-4">
+                <select class="form-select" id="semt-select" disabled>
+                    <option selected disabled>Semt/Mahalle Seçiniz</option>
+                </select>
+            </div>
+        </div>
+
+    </div>
+*@
+
+<div class="col-md-4">
+    <select class="form-select" id="il-select">
+        <option selected disabled>İl Seçiniz</option>
+        @foreach (var item in Model)
+        {
+            <option value="@item.Id">@item.City_Name</option>
+        }
+    </select>
+</div>
+<div class="col-md-4">
+    <select class="form-select" id="ilce-select" disabled>
+        <option selected disabled>İlçe Seçiniz</option>
+
+    </select>
+</div>
+<div class="col-md-4">
+    <select class="form-select" id="semt-select" disabled>
+        <option selected disabled>Semt/Mahalle Seçiniz</option>
+    </select>
+</div>
+
+<input type="text" id="messageInput">
+<button id="sendMessageBtn">Gönder</button>
+
+<script>
+
+    $('#sendMessageBtn').click(function () {
+        var message = $('#messageInput').val(); // Kullanıcının girdiği mesajı alıyoruz
+        $.ajax({
+            url: '/Home/SendMessage',
+            type: 'POST',
+            data: { message: message },
+            success: function (data) {
+                console.log('Mesaj gönderildi.');
+            },
+            error: function (error) {
+                console.log('Hata oluştu: ' + error);
+            }
+        });
+    });
+
+</script>
+
+
+
+
+
+
+
+
