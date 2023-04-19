@@ -33,7 +33,7 @@ namespace Redis_Distributed_Caching.Controllers
             // _distributedCache.Remove("sehirler");
             Console.WriteLine("VERİTABANIDNAN ÇEKİYOR" + DateTime.Now);
             // Veritabanı bağlantı dizesi
-            string connString = "Data Source=DESKTOP-MBGVKF7;Initial Catalog=NationalAddressDB;Integrated Security=True;Trusted_Connection=True;";
+            string connString = "Data Source=DESKTOP-MBGVKF7;Initial Catalog=NationalAddressDB;User ID=sa;Password=1510oguz;Integrated Security=True;Trusted_Connection=True;";
 
             // Veritabanı sorgusu
             string query = "SELECT * FROM Sehirler order by SehirAdi asc "; //PlakaNo

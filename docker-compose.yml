@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  redis_distributed_caching:
+    image: ${DOCKER_REGISTRY-}redisdistributedcaching
+    build:
+      context: .
+      dockerfile: Redis_Distributed_Caching\Dockerfile
