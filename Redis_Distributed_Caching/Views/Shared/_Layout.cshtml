@@ -90,7 +90,8 @@
 
         $(function () {
             $('#ilce-select').change(function () {
-                var ilceid = $(this).val();
+                var ilceid = $('#ilce-select select').val();
+                //var ilceid = $(this).val();
                 console.log(ilceid + 'ilce select sec calısıyor.');
                 /*        var ilName = $(this).text(); */// Seçilen ilin id'sini al
                 $.ajax({
@@ -105,25 +106,7 @@
                         console.log('Hata oluştu: ' + error);
                     }
                 });
-                //if (ilceid) {
-                //    console.log('ilceID İFTEN GEÇTİ');
-                //    $.ajax({
-                //        url: '/Home/GetSemtler',
-                //        type: 'Get',
-                //        data: { ilceid: ilceid },
-                //        success: function (data) {
-                //            $('#semtMah-select').html(data);
-                //            console.log('Mesaj gönderildi.' + data);
-                //        },
-                //        error: function (error) {
-                //            console.log('Hata oluştu: ' + error);
-                //        }
-                //    });
-                //} else {
-                //    // Eğer herhangi bir il seçimi yapılmadıysa ilçe ve semt seçeneklerini sıfırla
-                //    $('#ilce-select').empty().append($('<option>').text('İlçe Seçiniz').attr('disabled', true).attr('selected', true)).attr('disabled', true);
-                //    $('#semt-select').empty().append($('<option>').text('Semt/Mahalle Seçiniz').attr('disabled', true).attr('selected', true)).attr('disabled', true);
-                //}
+                
             });
         });
     </script>

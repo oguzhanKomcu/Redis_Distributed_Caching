@@ -106,7 +106,7 @@ namespace Redis_Distributed_Caching.Controllers
 
             string joinedListIlce = string.Join(",", listIlce);
             byte[] sehirlerBytesIlce = Encoding.UTF8.GetBytes(joinedListIlce);
-            string ilceler = "<select class=\"form-select\" id=\"ilce-select\">" +
+            string ilceler = "<select class=\"form-select\" id=\"ilce-select2\">" +
                 " <option selected>İlçe Seçiniz</option> ";
             foreach (var item in listIlce)
             {
