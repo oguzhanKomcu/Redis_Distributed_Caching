@@ -123,7 +123,7 @@ namespace Redis_Distributed_Caching.Controllers
         public async Task<JsonResult> GetSemtler(string ilceid)
         {
 
-            ilceid = "1";
+
             string connString = "Data Source=DESKTOP-MBGVKF7;Initial Catalog=NationalAddressDB;Integrated Security=True;Trusted_Connection=True;";
             // Veritabanı sorgusu
             string queryIlce = $"SELECT * from SemtMah where ilceId ={ilceid} order by SemtAdi asc ";
