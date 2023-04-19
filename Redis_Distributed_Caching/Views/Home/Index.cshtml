@@ -46,16 +46,10 @@
         }
     </select>
 </div>
-<div class="col-md-4">
-    <select class="form-select" id="ilce-select" disabled>
-        <option selected disabled>İlçe Seçiniz</option>
-
-    </select>
+<div class="col-md-4" id="ilce-select">
 </div>
-<div class="col-md-4">
-    <select class="form-select" id="semt-select" disabled>
-        <option selected disabled>Semt/Mahalle Seçiniz</option>
-    </select>
+<div class="col-md-4" id="semtMah-select">
+ 
 </div>
 
 <input type="text" id="messageInput">
@@ -63,20 +57,44 @@
 
 <script>
 
-    $('#sendMessageBtn').click(function () {
-        var message = $('#messageInput').val(); // Kullanıcının girdiği mesajı alıyoruz
-        $.ajax({
-            url: '/Home/SendMessage',
-            type: 'POST',
-            data: { message: message },
-            success: function (data) {
-                console.log('Mesaj gönderildi.');
-            },
-            error: function (error) {
-                console.log('Hata oluştu: ' + error);
-            }
-        });
-    });
+    //$('#sendMessageBtn').click(function () {
+    //    var message = $('#messageInput').val(); // Kullanıcının girdiği mesajı alıyoruz
+    //    $.ajax({
+    //        url: '/Home/GetIlceler',
+    //        type: 'POST',
+    //        data: { sehirId: message },
+    //        success: function (data) {
+    //            console.log('Mesaj gönderildi.');
+    //        },
+    //        error: function (error) {
+    //            console.log('Hata oluştu: ' + error);
+    //        }
+    //    });
+    //});
+
+    //$(function () {
+    //    $('#il-select').change(function () {
+    //        var ilName = $(this).text();
+    //        console.log(ilName + 'il select sec calısıyor.');
+    ///*        var ilName = $(this).text(); */// Seçilen ilin id'sini al
+    //        if (ilId) {
+    //            $.ajax({
+    //                        url: '/Home/GetIlceler',
+    //                        type: 'POST',
+    //                        data: { sehirAdi: ilName },
+    //                        success: function (data) {
+    //                    console.log('Mesaj gönderildi.' + data);
+    //                        },
+    //                        error: function (error) {
+    //                            console.log('Hata oluştu: ' + error);
+    //                        }
+    //                    });
+    //        } else {
+    //            // Eğer herhangi bir il seçimi yapılmadıysa ilçe ve semt seçeneklerini sıfırla
+    //            $('#ilce-select').empty().append($('<option>').text('İlçe Seçiniz').attr('disabled', true).attr('selected', true)).attr('disabled', true);
+    //            $('#semt-select').empty().append($('<option>').text('Semt/Mahalle Seçiniz').attr('disabled', true).attr('selected', true)).attr('disabled', true);
+    //        }
+    //    });
 
 </script>
 

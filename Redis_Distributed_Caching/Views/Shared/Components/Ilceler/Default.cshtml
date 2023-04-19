@@ -1,0 +1,11 @@
+﻿@model List<Ilce>
+
+<div class="col-md-4">
+    <select class="form-select" id="ilce-select" >
+        <option selected >İlçe Seçiniz</option>
+        @foreach (var item in Model)
+        {
+            <option value="@item.Id">@item.Ilce_Name</option>
+        }
+    </select>
+</div>

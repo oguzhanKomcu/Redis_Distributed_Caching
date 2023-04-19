@@ -48,21 +48,84 @@
     @await RenderSectionAsync("Scripts", required: false)
     <script>
 
-        $('#sendMessageBtn').click(function () {
-            var message = $('#messageInput').val(); // Kullanıcının girdiği mesajı alıyoruz
-            $.ajax({
-                url: '/Home/SendMessage',
-                type: 'POST',
-                data: { message: message },
-                success: function (data) {
-                    console.log('Mesaj gönderildi.');
-                },
-                error: function (error) {
-                    console.log('Hata oluştu: ' + error);
+
+        //    var message = $('#messageInput').val(); // Kullanıcının girdiği mesajı alıyoruz
+        //    $.ajax({
+        //        url: '/Home/SendMessage',
+        //        type: 'POST',
+        //        data: { message: message },
+        //        success: function (data) {
+        //            console.log('Mesaj gönderildi.');
+        //        },
+        //        error: function (error) {
+        //            console.log('Hata oluştu: ' + error);
+        //        }
+        //    });
+        //});
+        $(function () {
+            $('#il-select').change(function () {
+                var ilid = $(this).val();
+                console.log(ilid + 'il select sec calısıyor.');
+                /*        var ilName = $(this).text(); */// Seçilen ilin id'sini al
+                if (ilid) {
+                    $.ajax({
+                        url: '/Home/GetIlceler',
+                        type: 'Get',
+                        data: { ilid: ilid },
+                        success: function (data) {
+                            $('#ilce-select').html(data);
+                            console.log('Mesaj gönderildi.' + data);
+                        },
+                        error: function (error) {
+                            console.log('Hata oluştu: ' + error);
+                        }
+                    });
+                } else {
+                    // Eğer herhangi bir il seçimi yapılmadıysa ilçe ve semt seçeneklerini sıfırla
+                    $('#ilce-select').empty().append($('<option>').text('İlçe Seçiniz').attr('disabled', true).attr('selected', true)).attr('disabled', true);
+                    $('#semt-select').empty().append($('<option>').text('Semt/Mahalle Seçiniz').attr('disabled', true).attr('selected', true)).attr('disabled', true);
                 }
             });
         });
 
+        $(function () {
+            $('#ilce-select').change(function () {
+                var ilceid = $(this).val();
+                console.log(ilceid + 'ilce select sec calısıyor.');
+                /*        var ilName = $(this).text(); */// Seçilen ilin id'sini al
+                $.ajax({
+                    url: '/Home/GetSemtler',
+                    type: 'Get',
+                    data: { ilceid: ilceid },
+                    success: function (data) {
+                        $('#semtMah-select').html(data);
+                        console.log('Mesaj gönderildi.' + data);
+                    },
+                    error: function (error) {
+                        console.log('Hata oluştu: ' + error);
+                    }
+                });
+                //if (ilceid) {
+                //    console.log('ilceID İFTEN GEÇTİ');
+                //    $.ajax({
+                //        url: '/Home/GetSemtler',
+                //        type: 'Get',
+                //        data: { ilceid: ilceid },
+                //        success: function (data) {
+                //            $('#semtMah-select').html(data);
+                //            console.log('Mesaj gönderildi.' + data);
+                //        },
+                //        error: function (error) {
+                //            console.log('Hata oluştu: ' + error);
+                //        }
+                //    });
+                //} else {
+                //    // Eğer herhangi bir il seçimi yapılmadıysa ilçe ve semt seçeneklerini sıfırla
+                //    $('#ilce-select').empty().append($('<option>').text('İlçe Seçiniz').attr('disabled', true).attr('selected', true)).attr('disabled', true);
+                //    $('#semt-select').empty().append($('<option>').text('Semt/Mahalle Seçiniz').attr('disabled', true).attr('selected', true)).attr('disabled', true);
+                //}
+            });
+        });
     </script>
 </body>
 </html>
