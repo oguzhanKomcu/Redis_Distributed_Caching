@@ -73,7 +73,7 @@ namespace Redis_Distributed_Caching.Controllers
         [HttpGet]
         public async Task<JsonResult> GetIlceler(int ilid)
         {
-            string connString = "Data Source=DESKTOP-MBGVKF7;Initial Catalog=NationalAddressDB;Integrated Security=True;Trusted_Connection=True;";
+            string connString = "Data Source=DESKTOP-MBGVKF7;Initial Catalog=NationalAddressDB;User ID=sa;Password=1510oguz;Integrated Security=True;Trusted_Connection=True;";
             // Veritabanı sorgusu
             string queryIlce = $"SELECT * FROM Ilceler where  SehirId = {ilid} order by IlceAdi asc ";
 
@@ -124,7 +124,7 @@ namespace Redis_Distributed_Caching.Controllers
         {
 
 
-            string connString = "Data Source=DESKTOP-MBGVKF7;Initial Catalog=NationalAddressDB;Integrated Security=True;Trusted_Connection=True;";
+            string connString = "Data Source=DESKTOP-MBGVKF7;Initial Catalog=NationalAddressDB;User ID=sa;Password=1510oguz;Integrated Security=True;Trusted_Connection=True;";
             // Veritabanı sorgusu
             string queryIlce = $"SELECT * from SemtMah where ilceId ={ilceid} order by SemtAdi asc ";
 
