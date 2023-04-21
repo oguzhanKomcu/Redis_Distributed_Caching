@@ -14,6 +14,7 @@ using System.Text.Json;
 using StackExchange.Redis;
 using Microsoft.VisualBasic.FileIO;
 using Newtonsoft.Json.Linq;
+using Redis_Distributed_Caching.ViewComponents;
 
 namespace Redis_Distributed_Caching.Controllers
 {
@@ -30,50 +31,146 @@ namespace Redis_Distributed_Caching.Controllers
 
         public async Task<IActionResult> Index()
         {
-            // _distributedCache.Remove("sehirler");
-            Console.WriteLine("VERİTABANIDNAN ÇEKİYOR" + DateTime.Now);
-            // Veritabanı bağlantı dizesi
-            string connString = "Data Source=DESKTOP-MBGVKF7;Initial Catalog=NationalAddressDB;User ID=sa;Password=1510oguz;Integrated Security=True;Trusted_Connection=True;";
+            //// _distributedCache.Remove("sehirler");
+            //Console.WriteLine("VERİTABANIDNAN ÇEKİYOR" + DateTime.Now);
+            //// Veritabanı bağlantı dizesi
+            //string connString = "Data Source=DESKTOP-MBGVKF7;Initial Catalog=NationalAddressDB;User ID=sa;Password=1510oguz;Integrated Security=True;Trusted_Connection=True;";
 
-            // Veritabanı sorgusu
-            string query = "SELECT * FROM Sehirler order by SehirAdi asc "; //PlakaNo
+            //// Veritabanı sorgusu
+            //string query = "SELECT * FROM Sehirler order by SehirAdi asc "; //PlakaNo
 
-            // Veritabanı bağlantısı oluşturun
-            System.Data.SqlClient.SqlConnection conn = new System.Data.SqlClient.SqlConnection(connString);
+            //// Veritabanı bağlantısı oluşturun
+            //System.Data.SqlClient.SqlConnection conn = new System.Data.SqlClient.SqlConnection(connString);
 
-            // Komut nesnesi oluşturun ve sorguyu belirtin
-            SqlCommand cmd = new SqlCommand(query, conn);
+            //// Komut nesnesi oluşturun ve sorguyu belirtin
+            //SqlCommand cmd = new SqlCommand(query, conn);
 
-            // Verileri DataTable nesnesine doldurun
-            DataTable dt = new DataTable();
-            SqlDataAdapter da = new SqlDataAdapter(cmd);
-            da.Fill(dt);
+            //// Verileri DataTable nesnesine doldurun
+            //DataTable dt = new DataTable();
+            //SqlDataAdapter da = new SqlDataAdapter(cmd);
+            //da.Fill(dt);
 
-            List<City> list = new List<City>();
+            //List<City> list = new List<City>();
 
-            foreach (DataRow row in dt.Rows)
+            //foreach (DataRow row in dt.Rows)
+            //{
+
+            //    City city = new City();
+            //    city.Id = row["SehirId"].ToString();
+            //    city.City_Name = row["SehirAdi"].ToString();
+            //    list.Add(city);
+            //}
+
+            //var options = new DistributedCacheEntryOptions()
+            //         .SetAbsoluteExpiration(TimeSpan.FromMinutes(10));
+
+            //string joinedList = string.Join(",", list);
+            //byte[] sehirlerBytes = Encoding.UTF8.GetBytes(joinedList);
+
+            //return View(list);
+            // Check if the "list" data is already in cache
+            string cacheKey = "sehirler";
+            string cacheData = await _distributedCache.GetStringAsync(cacheKey);
+
+            if (cacheData != null)
             {
-
-                City city = new City();
-                city.Id = row["SehirId"].ToString();
-                city.City_Name = row["SehirAdi"].ToString();
-                list.Add(city);
+                // If the data is in cache, return it
+                List<City> cachedList = JsonConvert.DeserializeObject<List<City>>(cacheData);
+                return View(cachedList);
             }
+            else
+            {
+                // If the data is not in cache, retrieve it from the database
+                Console.WriteLine("VERİTABANIDNAN ÇEKİYOR" + DateTime.Now);
+                string connString = "Data Source=DESKTOP-MBGVKF7;Initial Catalog=NationalAddressDB;User ID=sa;Password=1510oguz;Integrated Security=True;Trusted_Connection=True;";
+                string query = "SELECT * FROM Sehirler order by SehirAdi asc ";
+                SqlConnection conn = new SqlConnection(connString);
+                SqlCommand cmd = new SqlCommand(query, conn);
+                DataTable dt = new DataTable();
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(dt);
 
-            var options = new DistributedCacheEntryOptions()
-                     .SetAbsoluteExpiration(TimeSpan.FromMinutes(10));
+                List<City> list = new List<City>();
 
-            string joinedList = string.Join(",", list);
-            byte[] sehirlerBytes = Encoding.UTF8.GetBytes(joinedList);
+                foreach (DataRow row in dt.Rows)
+                {
+                    City city = new City();
+                    city.Id = row["SehirId"].ToString();
+                    city.City_Name = row["SehirAdi"].ToString();
+                    list.Add(city);
+                }
 
-            return View(list);
+                // Store the "list" data in cache
+                var options = new DistributedCacheEntryOptions()
+                    .SetAbsoluteExpiration(TimeSpan.FromMinutes(10));
+                string serializedList = JsonConvert.SerializeObject(list);
+                byte[] listBytes = Encoding.UTF8.GetBytes(serializedList);
+                await _distributedCache.SetAsync(cacheKey, listBytes, options);
 
+                return View(list);
+
+            }
         }
 
         [HttpGet]
         public async Task<JsonResult> GetIlceler(int ilid)
         {
+            //string connString = "Data Source=DESKTOP-MBGVKF7;Initial Catalog=NationalAddressDB;User ID=sa;Password=1510oguz;Integrated Security=True;Trusted_Connection=True;";
+            //// Veritabanı sorgusu
+            //string queryIlce = $"SELECT * FROM Ilceler where  SehirId = {ilid} order by IlceAdi asc ";
+
+            //// Veritabanı bağlantısı oluşturun
+            //System.Data.SqlClient.SqlConnection connıLCE = new System.Data.SqlClient.SqlConnection(connString);
+
+            //// Komut nesnesi oluşturun ve sorguyu belirtin
+            //SqlCommand cmdIlce = new SqlCommand(queryIlce, connıLCE);
+
+            //// Verileri DataTable nesnesine doldurun
+            //DataTable dtIlce = new DataTable();
+            //SqlDataAdapter daIlce = new SqlDataAdapter(cmdIlce);
+            //daIlce.Fill(dtIlce);
+
+            //List<Ilce> listIlce = new List<Ilce>();
+
+            //foreach (DataRow row in dtIlce.Rows)
+            //{
+
+            //    Ilce ilce = new Ilce();
+            //    ilce.Id = row["ilceId"].ToString();
+            //    ilce.Ilce_Name = row["IlceAdi"].ToString();
+            //    ilce.Il_Id = row["SehirId"].ToString();
+
+            //    listIlce.Add(ilce);
+            //}
+
+            //var optionsIlce = new DistributedCacheEntryOptions()
+            //         .SetAbsoluteExpiration(TimeSpan.FromMinutes(10));
+
+            //string joinedListIlce = string.Join(",", listIlce);
+            //byte[] sehirlerBytesIlce = Encoding.UTF8.GetBytes(joinedListIlce);
+            //string ilceler = "<select class=\"form-select\" id=\"ilce-select2\">" +
+            //    " <option selected>İlçe Seçiniz</option> ";
+            //foreach (var item in listIlce)
+            //{
+            //   ilceler += $"<option value =\"{item.Id}\">{item.Ilce_Name}</option>";
+            //}
+
+            //     ilceler += "</select>";
+
+            //Console.WriteLine("VERİTABANIDNAN ÇEKTİ" + DateTime.Now);
+            //return Json(ilceler);
+
+            var cacheKey = $"ilceler_{ilid}";
+            var cachedIlceler = await _distributedCache.GetStringAsync(cacheKey);
+
+            if (!string.IsNullOrEmpty(cachedIlceler))
+            {
+                Console.WriteLine("CACHE'DEN ÇEKİLDİ" + DateTime.Now);
+                return Json(cachedIlceler);
+            }
+
             string connString = "Data Source=DESKTOP-MBGVKF7;Initial Catalog=NationalAddressDB;User ID=sa;Password=1510oguz;Integrated Security=True;Trusted_Connection=True;";
+
             // Veritabanı sorgusu
             string queryIlce = $"SELECT * FROM Ilceler where  SehirId = {ilid} order by IlceAdi asc ";
 
@@ -92,7 +189,6 @@ namespace Redis_Distributed_Caching.Controllers
 
             foreach (DataRow row in dtIlce.Rows)
             {
-
                 Ilce ilce = new Ilce();
                 ilce.Id = row["ilceId"].ToString();
                 ilce.Ilce_Name = row["IlceAdi"].ToString();
@@ -101,27 +197,38 @@ namespace Redis_Distributed_Caching.Controllers
                 listIlce.Add(ilce);
             }
 
-            var optionsIlce = new DistributedCacheEntryOptions()
-                     .SetAbsoluteExpiration(TimeSpan.FromMinutes(10));
-
-            string joinedListIlce = string.Join(",", listIlce);
-            byte[] sehirlerBytesIlce = Encoding.UTF8.GetBytes(joinedListIlce);
             string ilceler = "<select class=\"form-select\" id=\"ilce-select2\">" +
-                " <option selected>İlçe Seçiniz</option> ";
+                             " <option selected>İlçe Seçiniz</option> ";
+
             foreach (var item in listIlce)
             {
-               ilceler += $"<option value =\"{item.Id}\">{item.Ilce_Name}</option>";
+                ilceler += $"<option value =\"{item.Id}\">{item.Ilce_Name}</option>";
             }
-              
-                 ilceler += "</select>";
 
-            Console.WriteLine("VERİTABANIDNAN ÇEKTİ" + DateTime.Now);
+            ilceler += "</select>";
+
+            Console.WriteLine("VERİTABANIDNAN ÇEKİLDİ" + DateTime.Now);
+
+            var optionsIlce = new DistributedCacheEntryOptions()
+                .SetAbsoluteExpiration(TimeSpan.FromMinutes(10));
+
+            await _distributedCache.SetStringAsync(cacheKey, ilceler, optionsIlce);
+
             return Json(ilceler);
+
         }
 
         [HttpGet]
         public async Task<JsonResult> GetSemtler(string ilceid)
         {
+            var cacheKey = $"semtMahalleler_{ilceid}";
+            var cachedSemtMahalleler= await _distributedCache.GetStringAsync(cacheKey);
+
+            if (!string.IsNullOrEmpty(cachedSemtMahalleler))
+            {
+                Console.WriteLine("CACHE'DEN ÇEKİLDİ" + DateTime.Now);
+                return Json(cachedSemtMahalleler);
+            }
 
 
             string connString = "Data Source=DESKTOP-MBGVKF7;Initial Catalog=NationalAddressDB;User ID=sa;Password=1510oguz;Integrated Security=True;Trusted_Connection=True;";
@@ -155,11 +262,9 @@ namespace Redis_Distributed_Caching.Controllers
                 listSemtMah.Add(semtMah);
             }
 
-            var optionsIlce = new DistributedCacheEntryOptions()
-                     .SetAbsoluteExpiration(TimeSpan.FromMinutes(10));
 
-            string joinedListIlce = string.Join(",", listSemtMah);
-            byte[] sehirlerBytesIlce = Encoding.UTF8.GetBytes(joinedListIlce);
+
+
             string ilceler = "<select class=\"form-select\" id=\"semtMahId-select\">" +
               " <option selected>Mahalle Seçiniz</option> ";
             foreach (var item in listSemtMah)
@@ -170,6 +275,12 @@ namespace Redis_Distributed_Caching.Controllers
             ilceler += "</select>";
 
             Console.WriteLine("VERİTABANIDNAN ÇEKTİ" + DateTime.Now);
+
+
+            var optionsIlce = new DistributedCacheEntryOptions()
+                     .SetAbsoluteExpiration(TimeSpan.FromMinutes(10));
+
+            await _distributedCache.SetStringAsync(cacheKey, ilceler);
             return Json(ilceler);
         }
 
@@ -184,6 +295,30 @@ namespace Redis_Distributed_Caching.Controllers
        
 
             return Ok();
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> SaveAddress(string sehirId, string IlceId, string SemtMahId)
+        {
+
+            string connString = "Data Source=DESKTOP-MBGVKF7;Initial Catalog=NationalAddressDB;User ID=sa;Password=1510oguz;Trusted_Connection=True;";
+            // Veritabanı sorgusu
+
+            string queryAddAddress = $"INSERT INTO Adresler (Id, IlceId, SehirId, SemtMahId, UserId) VALUES ((SELECT MAX(Id) + 1 FROM Adresler),{IlceId}, {sehirId},{SemtMahId}, 1)";
+            // Veritabanı bağlantısı oluşturun
+            System.Data.SqlClient.SqlConnection connıLCE = new System.Data.SqlClient.SqlConnection(connString);
+
+            // Komut nesnesi oluşturun ve sorguyu belirtin
+            SqlCommand cmdIlce = new SqlCommand(queryAddAddress, connıLCE);
+
+            connıLCE.Open();
+            var result = cmdIlce.ExecuteNonQuery();
+            connıLCE.Close();
+
+
+
+
+            return Json("true");
         }
 
         public IActionResult Privacy()

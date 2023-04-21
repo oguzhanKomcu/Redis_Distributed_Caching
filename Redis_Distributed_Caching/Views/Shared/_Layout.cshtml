@@ -91,6 +91,7 @@
         $(function () {
             $('#ilce-select').change(function () {
                 var ilceid = $('#ilce-select select').val();
+
                 //var ilceid = $(this).val();
                 console.log(ilceid + 'ilce select sec calısıyor.');
                 /*        var ilName = $(this).text(); */// Seçilen ilin id'sini al
@@ -99,7 +100,7 @@
                     type: 'Get',
                     data: { ilceid: ilceid },
                     success: function (data) {
-                        $('#semtMah-select').html(data);
+                        $('#semt-select').html(data);
                         console.log('Mesaj gönderildi.' + data);
                     },
                     error: function (error) {
@@ -107,6 +108,26 @@
                     }
                 });
                 
+            }); 
+        });
+        $('#addAdres').click(function () {
+            var ilceid = $('#ilce-select select').val();
+            var ilid = $('#il-select').val();
+            var semtId = $('#semt-select select').val();
+            $.ajax({
+                url: '/Home/SaveAddress',
+                type: 'POST',
+                data: { sehirId: ilid, IlceId: ilceid, SemtMahId: semtId },
+                success: function (data) {
+                    if(data == "true")
+                    {
+                        alert("Adres başarılı bir şekilde eklendi.");
+                    }
+                    console.log('Mesaj gönderildi.');
+                },
+                error: function (error) {
+                    console.log('Hata oluştu: ' + error);
+                }
             });
         });
     </script>
